@@ -9,33 +9,32 @@ spec:
     matchLabels:
       app: vprodb
   replicas: 1
-  template: 
+  template:
     metadata:
       labels:
         app: vprodb
     spec:
       containers:
         - name: vprod
-          image: vprofile/vprofiledb:V1
+          image: 'vprofile/vprofiledb:V1'
           args:
-            - "--ignore-db-dir=lost+found"
+            - '--ignore-db-dir=lost+found'
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: vpro-db-data
           ports:
             - name: vprodb-port
               containerPort: 3306
-          env: 
+          env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: app-secret
                   key: db-pass
-                 
-    #  nodeSelector:
-     #   zone: us-east-1a
-      #volumes:
-       # - name: vpro-db-data
-        #  awsElasticBlockStore:
-         #   volumeID: vol-04f3ad28c6a4bfaa1
-          #  fsType: ext4
+      nodeSelector:
+        zone: us-east-1a
+      volumes:
+        - name: vpro-db-data
+          awsElasticBlockStore:
+            volumeID: vol-04f3ad28c6a4bfaa1
+            fsType: ext4
